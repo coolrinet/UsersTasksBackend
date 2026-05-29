@@ -11,6 +11,7 @@ builder.Services.AddDbContext<UsersTasksContext>(opt =>
 );
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddControllers();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

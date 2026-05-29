@@ -73,6 +73,22 @@ public class UsersService : IUsersService
         };
     }
 
+    public async Task<bool> Update(int id, UpdateUserDto dto)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return false;
+        }
+        
+        user.Name = dto.Name;
+        user.Email = dto.Email;
+        await _context.SaveChangesAsync();
+        
+        return true;
+    }
+
     public async Task<bool> Delete(int id)
     {
         var user = await _context.Users.FindAsync(id);

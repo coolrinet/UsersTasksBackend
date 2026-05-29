@@ -45,6 +45,19 @@ namespace UsersTasksBackend.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateUser(int id, UpdateUserDto user)
+        {
+            var isUpdated = await _usersService.Update(id, user);
+
+            if (!isUpdated)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
