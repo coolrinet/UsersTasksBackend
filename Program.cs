@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using UsersTasksBackend.Context;
 using UsersTasksBackend.Services.Implementations;
@@ -11,8 +12,9 @@ builder.Services.AddDbContext<UsersTasksContext>(opt =>
 );
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITasksService, TasksService>();
-builder.Services.AddControllers();
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddRouting(opt => opt.LowercaseUrls = true);
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -12,7 +12,6 @@ public class UpdateTaskDto
     public string Description { get; set; } = null!;
 
     [Required]
-    [EnumDataType(typeof(TaskStatus))]
     public TaskStatus Status { get; set; } = TaskStatus.Todo;
     
     public int? UserId { get; set; }

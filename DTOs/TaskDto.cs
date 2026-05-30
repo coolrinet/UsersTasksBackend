@@ -10,8 +10,7 @@ public class TaskDto
     public string Title { get; set; } = null!;
 
     public string Description { get; set; } = null!;
-
-    [EnumDataType(typeof(TaskStatus))]
+    
     public TaskStatus Status { get; set; }
     
     public UserDto? User { get; set; }
