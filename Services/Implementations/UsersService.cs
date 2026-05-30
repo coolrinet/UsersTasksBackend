@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UsersTasksBackend.Context;
 using UsersTasksBackend.DTOs;
+using UsersTasksBackend.Exceptions;
 using UsersTasksBackend.Models;
 using UsersTasksBackend.Services.Interfaces;
 
@@ -42,6 +43,11 @@ public class UsersService : IUsersService
 
     public async Task<UserDto> Create(CreateUserDto dto)
     {
+        if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+        {
+            throw new DuplicateException(nameof(CreateUserDto.Email), "Пользователь с данным email уже существует");
+        }
+        
         var userEntity = (await _context.Users.AddAsync(new User
         {
             Name =  dto.Name,

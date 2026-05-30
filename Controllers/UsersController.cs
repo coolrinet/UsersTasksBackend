@@ -1,5 +1,7 @@
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using UsersTasksBackend.DTOs;
+using UsersTasksBackend.Exceptions;
 using UsersTasksBackend.Services.Interfaces;
 
 namespace UsersTasksBackend.Controllers;
@@ -26,9 +28,20 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto user)
     {
-        var newUser = await _usersService.Create(user);
+        try
+        {
+            var newUser = await _usersService.Create(user);
 
-        return Created(string.Empty, newUser);
+            return Created(string.Empty, newUser);
+        }
+        catch (DuplicateException e)
+        {
+            return Conflict(new
+            {
+                field = e.Field,
+                message = e.Message
+            });
+        }
     }
 
     [HttpPut("{id:int}")]
