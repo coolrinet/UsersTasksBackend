@@ -18,27 +18,43 @@ public class UsersService : IUsersService
 
     public async Task<IEnumerable<UserDto>> GetAll(bool? hasTasks)
     {
-        var query = _context.Users.AsQueryable();
-
-        switch (hasTasks)
+        var query = hasTasks switch
         {
-            case true:
-                query = query.Where(u => u.Tasks.Any());
-                break;
-            case false:
-                query = query.Where(u => !u.Tasks.Any());
-                break;
-        }
-        
-        return await query 
-            .Select(u => new UserDto
+            true => _context.Users.Join(
+                _context.Tasks,
+                u => u.Id,
+                t => t.UserId,
+                (u, _) => new UserDto
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email
+                }),
+            false => _context.Users.LeftJoin(
+                    _context.Tasks,
+                    u => u.Id,
+                    t => t.UserId,
+                    (u, t) => new {u, t})
+                .Where(record => record.t == null)
+                .Select(record => new UserDto
+                {
+                    Id = record.u.Id,
+                    Name = record.u.Name,
+                    Email = record.u.Email
+                
+                }),
+            _ => _context.Users.Select(u => new UserDto
             {
                 Id = u.Id,
                 Name = u.Name,
-                Email =  u.Email
+                Email = u.Email
+                
             })
-            .OrderBy(u => u.Id)
-            .ToListAsync();
+        };
+
+        var users = await query.OrderBy(u => u.Id).ToListAsync();
+        
+        return users;
     }
 
     public async Task<UserDto> Create(CreateUserDto dto)
