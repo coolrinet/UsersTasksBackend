@@ -1,5 +1,4 @@
 using UsersTasksBackend.DTOs;
-using UsersTasksBackend.Models;
 
 namespace UsersTasksBackend.Services.Interfaces;
 

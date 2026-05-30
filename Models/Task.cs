@@ -8,7 +8,7 @@ public partial class Task
 
     public string Description { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
+    public TaskStatus Status { get; set; }
 
     public int? UserId { get; set; }
 

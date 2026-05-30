@@ -30,7 +30,8 @@ public partial class UsersTasksContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Status)
-                .HasDefaultValueSql("'todo'::text")
+                .HasDefaultValueSql("'Todo'::text")
+                .HasConversion<string>()
                 .HasColumnName("status");
             entity.Property(e => e.Title).HasColumnName("title");
             entity.Property(e => e.UserId).HasColumnName("user_id");
