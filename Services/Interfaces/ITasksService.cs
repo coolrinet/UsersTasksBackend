@@ -4,7 +4,7 @@ namespace UsersTasksBackend.Services.Interfaces;
 
 public interface ITasksService
 {
-    Task<IEnumerable<TaskDto>> GetAll();
+    Task<IEnumerable<TaskDto>> GetAll(bool? withUsers);
     Task<TaskDto> Create(CreateTaskDto dto);
     Task<bool> Update(int id, UpdateTaskDto dto);
     Task<bool> Delete(int id);

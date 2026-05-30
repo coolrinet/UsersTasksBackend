@@ -15,25 +15,35 @@ public class TasksService : ITasksService
         _context = context;
     }
     
-    public async Task<IEnumerable<TaskDto>> GetAll()
+    public async Task<IEnumerable<TaskDto>> GetAll(bool? withUsers)
     {
-        var tasks = await _context.Tasks
-            .Select(t => new TaskDto 
+        var query = withUsers switch
+        {
+            true => _context.Tasks.Join(_context.Users, t => t.UserId, u => u.Id,
+                (t, u) => new TaskDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Status = t.Status,
+                    User = new UserDto { Id = u.Id, Name = u.Name, Email = u.Email, }
+                }),
+            false => _context.Tasks.Where(t => t.UserId == null)
+                .Select(t => new TaskDto
+                {
+                    Id = t.Id, Title = t.Title, Description = t.Description, Status = t.Status,
+                }),
+            _ => _context.Tasks.Select(t => new TaskDto
             {
                 Id = t.Id,
                 Title = t.Title,
                 Description = t.Description,
                 Status = t.Status,
-                User = t.User == null ? null : new UserDto
-                {
-                    Id = t.User.Id,
-                    Name =  t.User.Name,
-                    Email = t.User.Email,
-                }
-            
+                User = t.User == null ? null : new UserDto { Id = t.User.Id, Name = t.User.Name, Email =  t.User.Email }
             })
-            .OrderBy(t => t.Id)
-            .ToArrayAsync();
+        };
+
+        var tasks = await query.OrderBy(t => t.Id).ToListAsync();
         
         return tasks;
     }
