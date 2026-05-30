@@ -10,6 +10,7 @@ builder.Services.AddDbContext<UsersTasksContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ITasksService, TasksService>();
 builder.Services.AddControllers();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddOpenApi();

@@ -1,4 +1,6 @@
-﻿namespace UsersTasksBackend.Models;
+﻿using TaskStatus = UsersTasksBackend.Models.Enums.TaskStatus;
+
+namespace UsersTasksBackend.Models;
 
 public partial class Task
 {

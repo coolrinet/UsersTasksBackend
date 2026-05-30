@@ -24,41 +24,26 @@ namespace UsersTasksBackend.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
-        {
-            var user = await _usersService.GetById(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(user);
-        }
-
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(CreateUserDto user)
+        public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto user)
         {
             var newUser = await _usersService.Create(user);
 
-            return CreatedAtAction(nameof(GetUser), new { id = newUser.Id }, newUser);
+            return Created(string.Empty, newUser);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult> UpdateUser(int id, UpdateUserDto user)
         {
             var isUpdated = await _usersService.Update(id, user);
 
             if (!isUpdated)
-            {
                 return NotFound();
-            }
 
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
             var isDeleted = await _usersService.Delete(id);

@@ -36,24 +36,8 @@ public class UsersService : IUsersService
                 Name = u.Name,
                 Email =  u.Email
             })
+            .OrderBy(u => u.Id)
             .ToListAsync();
-    }
-
-    public async Task<UserDto?> GetById(int id)
-    {
-        var user = await _context.Users.FindAsync(id);
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        return new UserDto
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email
-        };
     }
 
     public async Task<UserDto> Create(CreateUserDto dto)
