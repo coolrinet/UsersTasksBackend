@@ -50,31 +50,33 @@ public class TasksService : ITasksService
 
     public async Task<TaskDto> Create(CreateTaskDto dto)
     {
-        var taskEntity = (await  _context.Tasks.AddAsync(new Task
+        var taskEntity = (await _context.Tasks.AddAsync(new Task
         {
             Title = dto.Title,
             Description = dto.Description,
             Status = dto.Status,
-            UserId = dto.UserId,
+            UserId = dto.UserId
         })).Entity;
-        
         await _context.SaveChangesAsync();
 
-        return new TaskDto
-        {
-            Id = taskEntity.Id,
-            Title = taskEntity.Title,
-            Description = taskEntity.Description,
-            Status = taskEntity.Status,
-            User = taskEntity.User == null
-                ? null
-                : new UserDto
-                {
-                    Id = taskEntity.User.Id,
-                    Name = taskEntity.User.Name,
-                    Email = taskEntity.User.Email,
-                }
-        };
+        return await _context.Tasks
+            .Where(t => t.Id == taskEntity.Id)
+            .Select(t => new TaskDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Description = t.Description,
+                Status = t.Status,
+                User = t.User == null
+                    ? null
+                    : new UserDto
+                    {
+                        Id = t.User.Id,
+                        Name = t.User.Name,
+                        Email = t.User.Email
+                    }
+            })
+            .FirstAsync();
     }
 
     public async Task<bool> Update(int id, UpdateTaskDto dto)

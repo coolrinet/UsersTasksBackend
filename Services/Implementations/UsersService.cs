@@ -20,11 +20,8 @@ public class UsersService : IUsersService
     {
         var query = hasTasks switch
         {
-            true => _context.Users.Join(
-                _context.Tasks,
-                u => u.Id,
-                t => t.UserId,
-                (u, _) => new UserDto
+            true => _context.Users.Where(u => u.Tasks.Any())
+                .Select(u => new UserDto
                 {
                     Id = u.Id,
                     Name = u.Name,
